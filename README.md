@@ -23,21 +23,21 @@ This project predicts **Nitrogen Dioxide (NO₂)** levels in real-time using sim
    cd REAL-TIME-AIR-QUALITY-MONITORING-SYSTEM
 
 2.**Install requirements**
-```bash
+   ```bash
    pip install -r requirements.txt
-```
+   ```
 3.**Train the model**
-```bash
+   ```bash
    python train_model.py
-```
+   ```
 4.**Start the server**
-```bash
+   ```bash
    python app.py
-```
+   ```
 5.**Access in browser**
-```bash
+   ```bash
    http://127.0.0.1:5000
-```
+   ```
 
 ## 📊 Tech Stack
 - Backend: Python, Flask
