@@ -2,7 +2,6 @@
 
 This project predicts **Nitrogen Dioxide (NO₂)** levels in real-time using simulated IoT sensor data and live weather parameters from the **OpenWeather API**. It integrates **data fusion, preprocessing, and ML-based predictions (XGBoost & LSTM)** to alert users about air quality status via an interactive **web dashboard** with **maps and charts**.
 
----
 
 ## 🚀 Features
 
@@ -15,7 +14,12 @@ This project predicts **Nitrogen Dioxide (NO₂)** levels in real-time using sim
 - ⚠️ Smart alerts based on NO₂ levels (Safe / Unsafe)  
 - 🖥️ Web dashboard interface built with Flask + HTML + JS  
 
+
 ---
 
-## 📁 Project Structure
+## ⚙️ How to Run
 
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/deepikaeswaran/REAL-TIME-AIR-QUALITY-MONITORING-SYSTEM
+   cd REAL-TIME-AIR-QUALITY-MONITORING-SYSTEM
