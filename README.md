@@ -23,3 +23,28 @@ This project predicts **Nitrogen Dioxide (NO₂)** levels in real-time using sim
    ```bash
    git clone https://github.com/deepikaeswaran/REAL-TIME-AIR-QUALITY-MONITORING-SYSTEM
    cd REAL-TIME-AIR-QUALITY-MONITORING-SYSTEM
+
+2.**Install requirements**
+```bash
+   pip install -r requirements.txt
+```
+3.**Train the model**
+```bash
+   python train_model.py
+```
+4.**Start the server**
+```bash
+   python app.py
+```
+5.**Access in browser**
+```bash
+   http://127.0.0.1:5000
+```
+
+
+## 📊 Tech Stack
+Backend: Python, Flask
+Frontend: HTML, CSS, JavaScript
+Visualization: Leaflet.js, Chart.js
+ML Models: XGBoost, LSTM
+API: OpenWeather API
