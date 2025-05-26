@@ -50,6 +50,4 @@ This project predicts **Nitrogen Dioxide (NO₂)** levels in real-time using sim
 ![image](https://github.com/user-attachments/assets/cb5cebd4-3745-46bc-9430-2d7c70af3cc7)
 ![image](https://github.com/user-attachments/assets/10201aed-bcc5-4111-97fe-3f6a2cdbdc3d)
 
-## 📜 License
-This project is open-source and free to use under the MIT License.
 
