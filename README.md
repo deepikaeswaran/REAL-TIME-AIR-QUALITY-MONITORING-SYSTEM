@@ -43,8 +43,8 @@ This project predicts **Nitrogen Dioxide (NO₂)** levels in real-time using sim
 
 
 ## 📊 Tech Stack
-Backend: Python, Flask
-Frontend: HTML, CSS, JavaScript
-Visualization: Leaflet.js, Chart.js
-ML Models: XGBoost, LSTM
-API: OpenWeather API
+-Backend: Python, Flask
+-Frontend: HTML, CSS, JavaScript
+-Visualization: Leaflet.js, Chart.js
+-ML Models: XGBoost, LSTM
+-API: OpenWeather API
