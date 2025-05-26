@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Real-Time Air Quality Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .info-card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .info-card p {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    #map {
+      height: 350px;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    canvas {
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 30px auto;
+      display: block;
+      max-width: 800px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Real-Time Air Quality Monitor</h2>
+
+  <div class="info-card" id="info">
+    <p><strong>📍 Location:</strong> Click on the map to begin</p>
+    <p><strong>NO₂:</strong> -- µg/m³</p>
+    <p><strong>Temperature:</strong> -- °C</p>
+    <p><strong>Humidity:</strong> -- %</p>
+    <p><strong>Wind Speed:</strong> -- m/s</p>
+    <p><strong>Alert:</strong> --</p>
+  </div>
+
+  <div id="map"></div>
+  <canvas id="chart"></canvas>
+
+  <script>
+    let map = L.map('map').setView([10.0153, 77.4745], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    let marker = null;
+
+    const chartCtx = document.getElementById('chart').getContext('2d');
+    const chartData = {
+      labels: [],
+      datasets: [
+        {
+          label: 'NO₂ (µg/m³)',
+          data: [],
+          borderColor: 'red',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Temperature (°C)',
+          data: [],
+          borderColor: 'orange',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Humidity (%)',
+          data: [],
+          borderColor: 'blue',
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Wind Speed (m/s)',
+          data: [],
+          borderColor: 'green',
+          fill: false,
+          tension: 0.3
+        }
+      ]
+    };
+
+    const chart = new Chart(chartCtx, {
+      type: 'line',
+      data: chartData,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          },
+          title: {
+            display: true,
+            text: 'Real-Time Pollution Data Over Time'
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Timestamp'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Values'
+            },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    function updateUI(data) {
+      document.getElementById('info').innerHTML = `
+        <p><strong>📍 Location:</strong> [${data.lat.toFixed(3)}, ${data.lon.toFixed(3)}]</p>
+        <p><strong>NO₂:</strong> ${data.no2} µg/m³</p>
+        <p><strong>Temperature:</strong> ${data.temperature} °C</p>
+        <p><strong>Humidity:</strong> ${data.humidity} %</p>
+        <p><strong>Wind Speed:</strong> ${data.wind_speed} m/s</p>
+        <p><strong>Alert:</strong> ${data.alert}</p>
+      `;
+    }
+
+    function updateChart(data) {
+      const now = new Date().toLocaleTimeString();
+      chartData.labels.push(now);
+      chartData.datasets[0].data.push(data.no2);
+      chartData.datasets[1].data.push(data.temperature);
+      chartData.datasets[2].data.push(data.humidity);
+      chartData.datasets[3].data.push(data.wind_speed);
+
+      // Keep only latest 6
+      if (chartData.labels.length > 6) {
+        chartData.labels.shift();
+        chartData.datasets.forEach(ds => ds.data.shift());
+      }
+
+      chart.update();
+    }
+
+    async function fetchPrediction(lat, lon) {
+      const res = await fetch("/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lat, lon })
+      });
+      const data = await res.json();
+      updateUI(data);
+      updateChart(data);
+      if (marker) {
+        marker.setLatLng([lat, lon]);
+      } else {
+        marker = L.marker([lat, lon]).addTo(map);
+      }
+      marker.bindPopup("📍 Selected Location").openPopup();
+    }
+
+    map.on("click", function (e) {
+      const { lat, lng } = e.latlng;
+      fetchPrediction(lat, lng);
+    });
+
+    // Initial call
+    fetchPrediction(10.0153, 77.4745);
+  </script>
+
+</body>
+</html>
